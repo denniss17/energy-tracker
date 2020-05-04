@@ -1,2 +1,2 @@
 # energy-tracker
-Track your consumption of energy and utilties and safe money
+Track your energy consumption and save money
