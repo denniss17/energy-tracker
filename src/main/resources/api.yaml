@@ -1,0 +1,79 @@
+openapi: '3.0.3'
+info:
+  title: 'Energy Tracker API'
+  description: 'API for Energy Tracker'
+  license:
+    name: 'Apache 2.0'
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  version: '0.0.1'
+
+paths:
+  /meter-readings:
+    get:
+      summary: 'Gets a list of meter readings'
+      operationId: 'getMeterReadings'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: 'object'
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/Links'
+                  _embedded:
+                    type: 'object'
+                    properties:
+                      meterReadings:
+                        type: 'array'
+                        items:
+                          $ref: '#/components/schemas/MeterReading'
+
+components:
+  schemas:
+    Links:
+      type: object
+      required:
+        - self
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+      additionalProperties:
+        $ref: '#/components/schemas/Link'
+    Link:
+      type: object
+      required:
+        - href
+      properties:
+        href:
+          type: string
+        templated:
+          type: boolean
+        type:
+          type: string
+        name:
+          type: string
+        title:
+          type: string
+    MeterReading:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        electricityNormal:
+          type: integer
+          format: int32
+        electricityLow:
+          type: integer
+          format: int32
+        gas:
+          type: integer
+          format: int32
+        water:
+          type: integer
+          format: int32
+        timestamp:
+          type: string
+          format: date-time
