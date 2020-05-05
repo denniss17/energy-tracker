@@ -7,11 +7,11 @@ import spock.lang.Specification
 
 @SpringBootTest
 class EnergyTrackerApplicationTest extends Specification {
-	@Autowired
-	ApplicationContext context
+    @Autowired
+    ApplicationContext context
 
     def "context loads"() {
         expect:
-		context != null
+        context != null
     }
 }
