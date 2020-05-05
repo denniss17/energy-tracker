@@ -117,6 +117,12 @@
 			<artifactId>rest-assured</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>nl.topicus.overheid</groupId>
+			<artifactId>java-factory-bot</artifactId>
+			<version>0.2.0</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

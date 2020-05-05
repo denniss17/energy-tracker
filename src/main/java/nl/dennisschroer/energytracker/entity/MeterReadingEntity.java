@@ -9,6 +9,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -23,8 +24,8 @@ public class MeterReadingEntity {
     @CreatedDate
     private Date timestamp;
 
-    private int electricityNormal;
-    private int electricityLow;
-    private int gas;
+    private double electricityNormal;
+    private double electricityLow;
+    private double gas;
     private double water;
 }
