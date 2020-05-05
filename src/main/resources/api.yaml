@@ -7,6 +7,9 @@ info:
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
   version: '0.0.1'
 
+servers:
+  - url: http://localhost:8080
+
 paths:
   /meter-readings:
     get:
@@ -18,18 +21,7 @@ paths:
           content:
             application/json:
               schema:
-                type: 'object'
-                properties:
-                  _links:
-                    $ref: '#/components/schemas/Links'
-                  _embedded:
-                    type: 'object'
-                    properties:
-                      meterReadings:
-                        type: 'array'
-                        items:
-                          $ref: '#/components/schemas/MeterReading'
-
+                $ref: '#/components/schemas/MeterReadingCollection'
 components:
   schemas:
     Links:
@@ -39,8 +31,8 @@ components:
       properties:
         self:
           $ref: '#/components/schemas/Link'
-      additionalProperties:
-        $ref: '#/components/schemas/Link'
+    #      additionalProperties:
+    #        $ref: '#/components/schemas/Link'
     Link:
       type: object
       required:
@@ -56,6 +48,16 @@ components:
           type: string
         title:
           type: string
+    MeterReadingCollection:
+      type: 'object'
+      properties:
+        _embedded:
+          type: 'object'
+          properties:
+            meterReadings:
+              type: 'array'
+              items:
+                $ref: '#/components/schemas/MeterReading'
     MeterReading:
       type: object
       properties:
