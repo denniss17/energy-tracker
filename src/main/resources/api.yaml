@@ -62,20 +62,20 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
         electricityNormal:
-          type: integer
-          format: int32
+          type: number
+          format: double
         electricityLow:
-          type: integer
-          format: int32
+          type: number
+          format: double
         gas:
-          type: integer
-          format: int32
+          type: number
+          format: double
         water:
-          type: integer
-          format: int32
+          type: number
+          format: double
         timestamp:
           type: string
           format: date-time
