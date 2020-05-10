@@ -8,6 +8,7 @@ import nl.dennisschroer.energytracker.model.MeterReadingCollection;
 import nl.dennisschroer.energytracker.model.MeterReadingCollectionEmbedded;
 import nl.dennisschroer.energytracker.model.MeterReadingResource;
 import nl.dennisschroer.energytracker.repository.MeterReadingRepository;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +63,7 @@ public class MeterReadingController implements MeterReadingsApi {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
+                .contentType(MediaTypes.HAL_JSON)
                 .header(HttpHeaders.LOCATION,
                         linkTo(methodOn(MeterReadingController.class).getMeterReading(entity.getId())).toUri().toString())
                 .body(resource);
