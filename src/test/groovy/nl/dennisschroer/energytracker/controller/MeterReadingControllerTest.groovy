@@ -81,8 +81,10 @@ class MeterReadingControllerTest extends Specification {
                 .post("/meter-readings")
 
         then: "status code is BAD REQUEST"
-        def body = response.body()
+        response.peek()
+        response.contentType == MediaType.APPLICATION_PROBLEM_JSON_VALUE
         response.statusCode == HttpStatus.BAD_REQUEST.value()
+        def body = response.body()
         body.path("title") == "Bad Request"
         body.path("status") == HttpStatus.BAD_REQUEST.value()
     }

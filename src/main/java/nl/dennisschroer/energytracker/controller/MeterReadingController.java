@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,5 +42,10 @@ public class MeterReadingController implements MeterReadingsApi {
         response.add(linkTo(methodOn(MeterReadingController.class).getMeterReadings()).withSelfRel());
 
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<Void> createMeterReading(@Valid MeterReading meterReading) {
+        return null;
     }
 }
