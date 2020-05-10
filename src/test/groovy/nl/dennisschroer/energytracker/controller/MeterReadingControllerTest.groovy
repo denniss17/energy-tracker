@@ -2,6 +2,7 @@ package nl.dennisschroer.energytracker.controller
 
 import io.restassured.RestAssured
 import nl.dennisschroer.energytracker.factory.MeterReadingEntityFactory
+import nl.dennisschroer.energytracker.model.MeterReading
 import nl.dennisschroer.energytracker.repository.MeterReadingRepository
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Value
@@ -87,5 +88,28 @@ class MeterReadingControllerTest extends Specification {
         def body = response.body()
         body.path("title") == "Bad Request"
         body.path("status") == HttpStatus.BAD_REQUEST.value()
+    }
+
+    def "POST /meter-readings with meter reading creates a meter reading"() {
+        given:
+        def request = given()
+        def meterReadingEntity = MeterReadingEntityFactory.instance.build()
+        def meterReading = new MeterReading(
+                electricityNormal: meterReadingEntity.electricityNormal,
+                electricityLow: meterReadingEntity.electricityLow,
+                gas: meterReadingEntity.gas,
+                water: meterReadingEntity.water
+        )
+
+        when:
+        def response = request.when()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(meterReading)
+                .post("/meter-readings")
+
+        then: "status code is CREATED"
+        response.peek()
+        response.statusCode == HttpStatus.CREATED.value()
+        response.header(HttpHeaders.LOCATION) == "http://localhost:$port/meter-readings/1"
     }
 }

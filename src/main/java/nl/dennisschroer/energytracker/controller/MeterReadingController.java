@@ -6,13 +6,16 @@ import nl.dennisschroer.energytracker.mapper.MeterReadingMapper;
 import nl.dennisschroer.energytracker.model.MeterReading;
 import nl.dennisschroer.energytracker.model.MeterReadingCollection;
 import nl.dennisschroer.energytracker.model.MeterReadingCollectionEmbedded;
+import nl.dennisschroer.energytracker.model.MeterReadingResource;
 import nl.dennisschroer.energytracker.repository.MeterReadingRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -45,7 +48,16 @@ public class MeterReadingController implements MeterReadingsApi {
     }
 
     @Override
-    public ResponseEntity<Void> createMeterReading(@Valid MeterReading meterReading) {
+    public ResponseEntity<MeterReadingResource> getMeterReading(UUID meterReadingId) {
         return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> createMeterReading(@Valid MeterReading meterReading) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .header(HttpHeaders.LOCATION,
+                        linkTo(methodOn(MeterReadingController.class).getMeterReading(UUID.randomUUID())).toUri().toString())
+                .build();
     }
 }
