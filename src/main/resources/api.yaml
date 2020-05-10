@@ -19,7 +19,7 @@ paths:
         200:
           description: OK
           content:
-            application/json:
+            application/hal+json:
               schema:
                 $ref: '#/components/schemas/MeterReadingCollection'
     post:
@@ -35,7 +35,13 @@ paths:
         400:
           description: Bad Request
           content:
-            application/json:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        415:
+          description: Unsupported Media Type
+          content:
+            application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
         201:
@@ -46,7 +52,7 @@ paths:
               schema:
                 type: string
           content:
-            application/json:
+            application/hal+json:
               schema:
                 $ref: '#/components/schemas/MeterReadingResource'
   /meter-readings/{meterReadingId}:
@@ -64,13 +70,13 @@ paths:
         200:
           description: OK
           content:
-            application/json:
+            application/hal+json:
               schema:
                 $ref: '#/components/schemas/MeterReadingResource'
         404:
           description: Not Found
           content:
-            application/json:
+            application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
 components:
