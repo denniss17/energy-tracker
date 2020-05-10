@@ -34,8 +34,9 @@ public class MeterReadingController implements MeterReadingsApi {
 
     @Override
     public ResponseEntity<MeterReadingCollection> getMeterReadings() {
-        List<MeterReadingEntity> meterReadingEntities = meterReadingRepository.findAll();
-        List<MeterReading> meterReadings = meterReadingEntities.stream().map(meterReadingMapper::mapToDto).collect(Collectors.toList());
+        List<MeterReadingResource> meterReadings = meterReadingRepository.findAll().stream()
+                .map(meterReadingMapper::mapToResource)
+                .collect(Collectors.toList());
 
         MeterReadingCollection response = new MeterReadingCollection();
         MeterReadingCollectionEmbedded embedded = new MeterReadingCollectionEmbedded();
@@ -53,11 +54,16 @@ public class MeterReadingController implements MeterReadingsApi {
     }
 
     @Override
-    public ResponseEntity<Void> createMeterReading(@Valid MeterReading meterReading) {
+    public ResponseEntity<MeterReadingResource> createMeterReading(@Valid MeterReading meterReading) {
+        MeterReadingEntity entity = meterReadingMapper.mapToEntity(meterReading);
+        entity = meterReadingRepository.save(entity);
+
+        MeterReadingResource resource = meterReadingMapper.mapToResource(entity);
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header(HttpHeaders.LOCATION,
-                        linkTo(methodOn(MeterReadingController.class).getMeterReading(UUID.randomUUID())).toUri().toString())
-                .build();
+                        linkTo(methodOn(MeterReadingController.class).getMeterReading(entity.getId())).toUri().toString())
+                .body(resource);
     }
 }
