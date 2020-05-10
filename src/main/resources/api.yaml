@@ -108,7 +108,7 @@ components:
         title:
           type: string
         status:
-          type: int
+          type: integer
         detail:
           type: string
     MeterReadingCollection:
