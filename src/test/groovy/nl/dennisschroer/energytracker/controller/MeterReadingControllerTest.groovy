@@ -76,14 +76,28 @@ class MeterReadingControllerTest extends Specification {
         body.path("_embedded.meterReadings[0].timestamp") == formatDate(meterReadingEntity.timestamp)
     }
 
-    def "POST /meter-readings with empty request body returns a bad request error"() {
+    def "POST /meter-readings with invalid content type returns an unsupported media type problem"() {
+        when:
+        def response = given().when()
+                .post("/meter-readings")
+
+        then: "status code is UNSUPPORTED_MEDIA_TYPE"
+        response.contentType == MediaType.APPLICATION_PROBLEM_JSON_VALUE
+        response.statusCode == HttpStatus.UNSUPPORTED_MEDIA_TYPE.value()
+
+        and: "body contains problem"
+        def body = response.body()
+        body.path("title") == "Unsupported Media Type"
+        body.path("status") == HttpStatus.UNSUPPORTED_MEDIA_TYPE.value()
+    }
+
+    def "POST /meter-readings with empty request body returns a bad request problem"() {
         when:
         def response = given().when()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .post("/meter-readings")
 
-        then: "status code is BAD REQUEST"
-        response.peek()
+        then: "status code is BAD_REQUEST"
         response.contentType == MediaType.APPLICATION_PROBLEM_JSON_VALUE
         response.statusCode == HttpStatus.BAD_REQUEST.value()
 
