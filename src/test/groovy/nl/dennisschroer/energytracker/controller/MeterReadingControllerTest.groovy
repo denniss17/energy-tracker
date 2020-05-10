@@ -6,9 +6,9 @@ import nl.dennisschroer.energytracker.factory.MeterReadingEntityFactory
 import nl.dennisschroer.energytracker.factory.MeterReadingFactory
 import nl.dennisschroer.energytracker.repository.MeterReadingRepository
 import org.spockframework.spring.SpringBean
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.hateoas.MediaTypes
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -43,6 +43,7 @@ class MeterReadingControllerTest extends Specification {
 
         then: "status code is OK"
         response.statusCode == 200
+        response.contentType == MediaTypes.HAL_JSON_VALUE
 
         and: "links contains reference to self"
         response.body().path("_links.self.href") == "http://localhost:$port/meter-readings"
@@ -63,7 +64,7 @@ class MeterReadingControllerTest extends Specification {
         then: "status code is OK"
         def body = response.body()
         response.statusCode == 200
-        response.contentType == MediaType.APPLICATION_JSON_VALUE
+        response.contentType == MediaTypes.HAL_JSON_VALUE
 
         and: "links contains reference to self"
         body.path("_links.self.href") == "http://localhost:$port/meter-readings"
@@ -128,7 +129,7 @@ class MeterReadingControllerTest extends Specification {
 
         and: "status code is CREATED"
         response.statusCode == HttpStatus.CREATED.value()
-        response.contentType == MediaType.APPLICATION_JSON_VALUE
+        response.contentType == MediaTypes.HAL_JSON_VALUE
         response.header(HttpHeaders.LOCATION) == "http://localhost:$port/meter-readings/$id"
 
         and: "response body contains meter reading"
@@ -145,11 +146,11 @@ class MeterReadingControllerTest extends Specification {
         body.path("_links.self.href") == "http://localhost:$port/meter-readings/$id"
     }
 
-    def formatDate(OffsetDateTime date){
+    def formatDate(OffsetDateTime date) {
         date.toLocalDateTime().atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
     }
 
-    def formatDate(Date date){
+    def formatDate(Date date) {
         date.toLocalDateTime().atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
     }
 }
