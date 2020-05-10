@@ -22,6 +22,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MeterReadingCollection'
+    post:
+      summary: 'Creates a meter reading'
+      operationId: 'createMeterReading'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeterReading'
+        required: true
+      responses:
+        400:
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        201:
+          description: 'Created'
+          headers:
+            Location:
+              description: The location of the created resource
+              schema:
+                type: string
 components:
   schemas:
     Links:
@@ -48,6 +71,14 @@ components:
           type: string
         title:
           type: string
+    Problem:
+      type: object
+      description: Object describing a problem using RFC7807
+      properties:
+        title:
+          type: 'string'
+        status:
+          type: 'int'
     MeterReadingCollection:
       type: 'object'
       properties:
@@ -60,6 +91,11 @@ components:
                 $ref: '#/components/schemas/MeterReading'
     MeterReading:
       type: object
+      required:
+        - electricityNormal
+        - electricityLow
+        - gas
+        - water
       properties:
         id:
           type: string

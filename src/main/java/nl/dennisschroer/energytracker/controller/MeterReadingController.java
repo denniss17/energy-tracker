@@ -19,11 +19,14 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Controller
 public class MeterReadingController implements MeterReadingsApi {
-    @Autowired
-    private MeterReadingRepository meterReadingRepository;
+    private final MeterReadingRepository meterReadingRepository;
 
-    @Autowired
-    private MeterReadingMapper meterReadingMapper;
+    private final MeterReadingMapper meterReadingMapper;
+
+    public MeterReadingController(MeterReadingRepository meterReadingRepository, MeterReadingMapper meterReadingMapper) {
+        this.meterReadingRepository = meterReadingRepository;
+        this.meterReadingMapper = meterReadingMapper;
+    }
 
     @Override
     public ResponseEntity<MeterReadingCollection> getMeterReadings() {

@@ -6,6 +6,9 @@ import nl.dennisschroer.energytracker.repository.MeterReadingRepository
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import spock.lang.Specification
 
 import java.time.ZoneOffset
@@ -66,5 +69,21 @@ class MeterReadingControllerTest extends Specification {
         body.path("_embedded.meterReadings[0].id") == meterReadingEntity.id
         body.path("_embedded.meterReadings[0].electricityLow") == meterReadingEntity.electricityLow
         body.path("_embedded.meterReadings[0].timestamp") == meterReadingEntity.timestamp.toInstant().atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+    }
+
+    def "POST /meter-readings with empty request body returns a bad request error"() {
+        given:
+        def request = given()
+
+        when:
+        def response = request.when()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .post("/meter-readings")
+
+        then: "status code is BAD REQUEST"
+        def body = response.body()
+        response.statusCode == HttpStatus.BAD_REQUEST.value()
+        body.path("title") == "Bad Request"
+        body.path("status") == HttpStatus.BAD_REQUEST.value()
     }
 }
