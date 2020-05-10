@@ -8,6 +8,7 @@ create table meter_readings
     electricity_normal double precision not null,
     gas                double precision not null,
     water              double precision not null,
-    timestamp          timestamp        not null
+    timestamp          timestamp        not null,
+    creation_date      timestamp        not null
 );
 

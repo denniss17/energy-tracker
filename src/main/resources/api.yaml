@@ -1,11 +1,11 @@
-openapi: '3.0.3'
+openapi: 3.0.3
 info:
-  title: 'Energy Tracker API'
-  description: 'API for Energy Tracker'
+  title: Energy Tracker API
+  description: API for Energy Tracker
   license:
-    name: 'Apache 2.0'
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
-  version: '0.0.1'
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.1
 
 servers:
   - url: http://localhost:8080
@@ -13,15 +13,66 @@ servers:
 paths:
   /meter-readings:
     get:
-      summary: 'Gets a list of meter readings'
-      operationId: 'getMeterReadings'
+      summary: Gets a list of meter readings
+      operationId: getMeterReadings
       responses:
         200:
-          description: 'OK'
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/MeterReadingCollection'
+    post:
+      summary: Creates a meter reading
+      operationId: createMeterReading
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeterReading'
+        required: true
+      responses:
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        201:
+          description: Created
+          headers:
+            Location:
+              description: The location of the created resource
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeterReadingResource'
+  /meter-readings/{meterReadingId}:
+    parameters:
+      - name: meterReadingId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Gets a meter readings
+      operationId: getMeterReading
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeterReadingResource'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
 components:
   schemas:
     Links:
@@ -32,7 +83,7 @@ components:
         self:
           $ref: '#/components/schemas/Link'
     #      additionalProperties:
-    #        $ref: '#/components/schemas/Link'
+    #        $ref: #/components/schemas/Link
     Link:
       type: object
       required:
@@ -48,22 +99,36 @@ components:
           type: string
         title:
           type: string
-    MeterReadingCollection:
-      type: 'object'
+    Problem:
+      type: object
+      description: Object describing a problem using RFC7807
       properties:
-        _embedded:
-          type: 'object'
-          properties:
-            meterReadings:
-              type: 'array'
-              items:
-                $ref: '#/components/schemas/MeterReading'
-    MeterReading:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: int
+        detail:
+          type: string
+    MeterReadingCollection:
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
+        _embedded:
+          type: object
+          properties:
+            meterReadings:
+              type: array
+              items:
+                $ref: '#/components/schemas/MeterReadingResource'
+    MeterReading:
+      type: object
+      required:
+        - electricityNormal
+        - electricityLow
+        - gas
+        - water
+      properties:
         electricityNormal:
           type: number
           format: double
@@ -79,3 +144,14 @@ components:
         timestamp:
           type: string
           format: date-time
+    MeterReadingResource:
+      allOf:
+        - $ref: '#/components/schemas/MeterReading'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            creationDate:
+              type: string
+              format: date-time
