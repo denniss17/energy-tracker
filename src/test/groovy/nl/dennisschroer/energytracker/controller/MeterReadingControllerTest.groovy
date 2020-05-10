@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Specification
 
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 import static io.restassured.RestAssured.given
 
@@ -64,6 +65,6 @@ class MeterReadingControllerTest extends Specification {
         (body.path("_embedded.meterReadings") as List).size() == 1
         body.path("_embedded.meterReadings[0].id") == meterReadingEntity.id
         body.path("_embedded.meterReadings[0].electricityLow") == meterReadingEntity.electricityLow
-        body.path("_embedded.meterReadings[0].timestamp") == meterReadingEntity.timestamp.toInstant().atOffset(ZoneOffset.UTC).toString()
+        body.path("_embedded.meterReadings[0].timestamp") == meterReadingEntity.timestamp.toInstant().atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
     }
 }
