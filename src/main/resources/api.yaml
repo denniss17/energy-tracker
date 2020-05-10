@@ -45,6 +45,10 @@ paths:
               description: The location of the created resource
               schema:
                 type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeterReadingResource'
   /meter-readings/{meterReadingId}:
     parameters:
       - name: meterReadingId
@@ -116,7 +120,7 @@ components:
             meterReadings:
               type: array
               items:
-                $ref: '#/components/schemas/MeterReading'
+                $ref: '#/components/schemas/MeterReadingResource'
     MeterReading:
       type: object
       required:
@@ -125,9 +129,6 @@ components:
         - gas
         - water
       properties:
-        id:
-          type: string
-          format: uuid
         electricityNormal:
           type: number
           format: double
@@ -146,3 +147,11 @@ components:
     MeterReadingResource:
       allOf:
         - $ref: '#/components/schemas/MeterReading'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            creationDate:
+              type: string
+              format: date-time
